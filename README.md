@@ -4,15 +4,6 @@ Terraform으로 AWS 네트워크와 EKS 클러스터를 만들고, Amazon EFS를
 
 실제 AWS 배포 전에는 계정 권한, 리전, 비용, 네트워크 및 아래의 LoadBalancer 검토사항을 확인하세요.
 
-
-
-
-
-
-
-
-
-
 ## 주요 구성
 
 - **인프라**: Terraform 모듈로 VPC, 서브넷, IGW, NAT Gateway, 라우팅 테이블, EKS 및 관리형 노드 그룹 생성
@@ -52,7 +43,6 @@ AWS VPC (public/private subnets, IGW, NAT, routes)
 ├── p3-log-analysis-ELK/          # Elasticsearch, Filebeat, Logstash, Kibana
 └── p4-monitoring-Pro-Gra-Sla/    # 현재 비어 있음
 ```
-
 
 ## 사전 준비
 
