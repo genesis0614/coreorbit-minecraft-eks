@@ -2,7 +2,9 @@
 
 Terraform으로 AWS 네트워크와 EKS 클러스터를 만들고, Amazon EFS를 공유 저장소로 사용하는 Minecraft 서버 두 대와 BungeeCord 프록시, ELK 로그 분석 스택을 Kubernetes에 배포하는 프로젝트입니다.
 
-이 README는 현재 `p0`~`p4` 프로젝트 파일을 기준으로 한 안내입니다. `extra-*`는 과거 실험 자료이며 기본 배포 경로가 아닙니다. 실제 AWS 배포 전에는 계정 권한, 리전, 비용, 네트워크 및 아래의 LoadBalancer 검토사항을 확인하세요.
+실제 AWS 배포 전에는 계정 권한, 리전, 비용, 네트워크 및 아래의 LoadBalancer 검토사항을 확인하세요.
+
+
 
 ## 주요 구성
 
@@ -11,6 +13,7 @@ Terraform으로 AWS 네트워크와 EKS 클러스터를 만들고, Amazon EFS를
 - **공유 저장소**: Amazon EFS CSI Driver, StorageClass, PVC
 - **로그 분석**: Filebeat → Logstash → Elasticsearch → Kibana
 - **발표 및 아키텍처 자료**: `p0-ppt-work`
+
 
 ## 아키텍처 개요
 
@@ -28,11 +31,11 @@ AWS VPC (public/private subnets, IGW, NAT, routes)
                 └── Kibana
 ```
 
+
 ## 저장소 구조
 
 ```text
 .
-├── p0-ppt-work/                 # 발표 자료, 아키텍처 및 이미지
 ├── p1-infra-base/
 │   ├── infra/                    # Terraform root module과 변수
 │   └── modules/
@@ -40,15 +43,9 @@ AWS VPC (public/private subnets, IGW, NAT, routes)
 │       └── eks/                  # EKS, IAM, node group, addons
 ├── p2-game-server/              # EFS 설정, Minecraft YAML, BungeeCord Helm chart
 ├── p3-log-analysis-ELK/          # Elasticsearch, Filebeat, Logstash, Kibana
-├── p4-monitoring-Pro-Gra-Sla/    # 현재 비어 있음
-├── extra-infra-EKS/              # 과거 EKS 실험 설정 및 메모
-├── extra-bungeecord/             # 과거 직접 적용 방식의 BungeeCord YAML
-├── workflow-new.txt              # 통합 전 작업 절차 원본
-├── workflow-review-candidates.txt
-├── workflow-delete.txt           # 주 가이드에서 제외한 중복 절차 보관
-├── workflow-delete-eks.txt       # 검토용으로 분리한 과거 절차
-└── README.md                     # 통합된 프로젝트 및 배포 가이드
+└── p4-monitoring-Pro-Gra-Sla/    # 현재 비어 있음
 ```
+
 
 ## 사전 준비
 
@@ -81,6 +78,7 @@ node_key_name = "<AWS에-등록한-키-페어-이름>"
 `p1-infra-base/infra/variables.tf`의 필수 값은 모두 설정해야 합니다. 네트워크 변수에는 리전, VPC CIDR, 두 개의 public/private subnet CIDR·AZ suffix·이름, NAT 배치용 public subnet key와 리소스 이름이 포함됩니다. EKS 변수에는 cluster name/version, node group name, instance type, desired/min/max 개수, node volume 크기와 위의 `node_key_name`이 포함됩니다.
 
 `terraform.tfvars`, Terraform state, `.pem`/`.ppk` 개인 키, kubeconfig 및 실제 비밀번호는 공개 저장소에 커밋하지 마세요. README에는 비밀값을 넣지 말고 로컬 변수 파일에서만 관리하세요.
+
 
 ## 배포 흐름
 
@@ -325,6 +323,8 @@ curl -sS "http://localhost:9200/_cat/indices?v"
 
 Kibana는 `kubectl get svc kibana -n elk`로 서비스 포트를 확인합니다. 과거 ELB 주소나 Pod 이름을 재사용하지 마세요.
 
+
+
 ## 배포 전 확인이 필요한 구성
 
 - BungeeCord, Elasticsearch, Logstash, Kibana 서비스 중 일부 manifest는 `type: LoadBalancer`입니다. 이 설정은 AWS Load Balancer 생성을 요청합니다. Terraform은 관련 IAM policy와 subnet tag를 설정하지만 AWS Load Balancer Controller 자체를 설치하지 않으므로, 외부 LB 배포는 현재 저장소만으로 검증되지 않았습니다. 선택지와 확인사항은 `workflow-review-candidates.txt`를 보세요.
@@ -332,11 +332,15 @@ Kibana는 `kubectl get svc kibana -n elk`로 서비스 포트를 확인합니다
 - ELK manifest의 Elasticsearch 주소/인증 설정은 서로 일치하도록 실제 환경에서 조정해야 합니다. 현재 확인되지 않은 endpoint/credential을 그대로 복사하지 마세요.
 - `p4-monitoring-Pro-Gra-Sla/`는 비어 있어 모니터링 배포 절차는 포함하지 않았습니다.
 
+
+
 ## 정리 파일
 
 - `workflow-review-candidates.txt`: 배포 전에 프로젝트 소유자가 결정해야 할 내용
 - `workflow-delete.txt`: 기존 메모에서 현재 Helm/Terraform 흐름에 중복되는 절차를 별도 보관
 - `workflow-delete-eks.txt`: 별도 검토를 위해 분리한 과거 절차
+
+
 
 ## 공개 저장소에 올리기 전
 
