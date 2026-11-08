@@ -6,6 +6,13 @@ Terraform으로 AWS 네트워크와 EKS 클러스터를 만들고, Amazon EFS를
 
 
 
+
+
+
+
+
+
+
 ## 주요 구성
 
 - **인프라**: Terraform 모듈로 VPC, 서브넷, IGW, NAT Gateway, 라우팅 테이블, EKS 및 관리형 노드 그룹 생성
