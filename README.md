@@ -380,22 +380,3 @@ ELK 리소스는 `elk` namespace, Filebeat는 `default` namespace에 배포됩�
 
 - Kibana는 `kubectl get svc -n elk`로 서비스 포트를 확인합니다.
     ![키바나 확인명령어](assets/kibana-kubectl.png)
-
-<br>
-<br>
-<br>
-
-## 배포 전 확인이 필요한 구성
-
-
-## 정리 파일
-
-- `workflow-review-candidates.txt`: 배포 전에 프로젝트 소유자가 결정해야 할 내용
-- `workflow-delete.txt`: 기존 메모에서 현재 Helm/Terraform 흐름에 중복되는 절차를 별도 보관
-- `workflow-delete-eks.txt`: 별도 검토를 위해 분리한 과거 절차
-
-## 공개 저장소에 올리기 전
-
-- `terraform.tfvars`, Terraform state, `.pem`/`.ppk`, kubeconfig를 확인하고 공개 저장소에 커밋하지 마세요.
-- IAM 정책, ELK 인증 설정, 계정/리소스 ID, 외부 주소가 불필요하게 노출되는지 확인하세요.
-- 루트 프로젝트의 라이선스와 실제 AWS 배포 검증 여부는 별도로 결정하세요.
