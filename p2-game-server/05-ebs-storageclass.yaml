@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp2                                # EBS 볼륨 유형 (gp2, gp3 등)
+  csi.storage.k8s.io/fstype: ext4          # 파일 시스템 타입 (ext4)
+  encrypted: "true"                        # EBS 볼륨 암호화 활성화 여부
+allowVolumeExpansion: true                 # PVC 생성 후 볼륨 크기 확장 가능 여부
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain                      # PVC 삭제 시 연동된 EBS 볼륨 자동 삭제 정책

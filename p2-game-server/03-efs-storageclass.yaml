@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-0d00000dd0000000d   #실제 file system ID로 변경 필요
+  directoryPerms: "700"
+  gidRangeStart: "1000"
+  gidRangeEnd: "2000" 
+  basePath: "/dynamic_provisioning"

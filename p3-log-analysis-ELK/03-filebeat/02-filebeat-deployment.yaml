@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:6.8.23
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/minecraft  # Filebeat에서 읽을 디렉토리
+        - name: filebeat-config
+          mountPath: /usr/share/filebeat/filebeat.yml
+          subPath: filebeat.yml
+      volumes:
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: efs-claim  # PVC를 통해 Minecraft 서버와 공유
+      - name: filebeat-config
+        configMap:
+          name: filebeat-config

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: default
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+    - type: log
+      paths:
+        - /var/log/minecraft/*.log
+    output.logstash:
+      hosts: ["logstash.elk.svc.cluster.local:5000"]
+    setup.kibana:
+      host: "a9e526cd90f8d458da3836f1509b3636-1310172945.ap-northeast-2.elb.amazonaws.com:33000/"

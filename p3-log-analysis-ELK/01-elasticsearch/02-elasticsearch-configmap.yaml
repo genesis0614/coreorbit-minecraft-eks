@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: elk
+  name: elasticsearch-config
+  labels:
+    app: elasticsearch
+    #role: data
+data:
+  elasticsearch.yml: |-
+    cluster.name: "eks-elasticsearch"
+    network.host: 0.0.0.0			# 외부 접근    
+    #node.name: ${NODE_NAME}		# 노드 이름
+    #discovery.seed_hosts: ${NODE_LIST}			# 노드 리스트
+    #cluster.initial_master_nodes: ${MASTER_NODES}	# 마스터 노드
+    #node:					# 노드 정보 옵션
+    #  master: false
+    #  data: true
+    #  ingest: false
+    xpack.license.self_generated.type: trial
+    xpack.security.enabled: true
+    xpack.monitoring.collection.enabled: true

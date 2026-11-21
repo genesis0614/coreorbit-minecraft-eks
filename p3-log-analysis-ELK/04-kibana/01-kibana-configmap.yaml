@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: elk
+  name: kibana-config
+  labels:
+    app: kibana
+data:
+  kibana.yml: |-
+    server.name: kibana
+    server.host: 0.0.0.0
+    monitoring.ui.container.elasticsearch.enabled: true
+    monitoring.ui.container.logstash.enabled: true
+    elasticsearch.hosts: [ "http://elasticsearch-nodeport.elk.svc.cluster.local:9200" ]
+    xpack.monitoring.ui.container.elasticsearch.enabled: true
+    elasticsearch.username: elastic
+    elasticsearch.password: elastic
+
+    

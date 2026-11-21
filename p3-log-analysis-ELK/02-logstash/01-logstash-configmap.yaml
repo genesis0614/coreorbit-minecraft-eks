@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: elk
+  name: logstash-configmap
+  labels:
+    task: logging
+    k8s-app: logstash
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"  # 모든 네트워크 인터페이스에서 수신
+    path.config: /usr/share/logstash/pipeline
+  logstash.conf: |
+    input {
+      beats {
+        port => 5000
+      }
+    }
+
+    filter {
+      grok {
+        match => { "message" => "%{TIMESTAMP_ISO8601:timestamp} %{WORD:log_level} %{DATA:source} - %{GREEDYDATA:log_message}" }
+      }
+      date {
+        match => [ "timestamp", "ISO8601" ]
+        target => "@timestamp"
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["http://elasticsearch-nodeport.elk.svc.cluster.local:9200"]
+        index => "minecraft-logs-%{+yyyy.MM.dd}"
+        user => "elasticsearch"
+        password => "elasticsearch"
+      }
+    }

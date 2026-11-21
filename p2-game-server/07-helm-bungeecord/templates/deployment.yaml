@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: bungeecord
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: bungeecord
+  template:
+    metadata:
+      labels:
+        app: bungeecord
+    spec:
+      containers:
+      - name: bungeecord
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /server/config.yml
+          subPath: config.yml
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          curl -f -o /server/BungeeCord.jar https://ci.md-5.net/job/BungeeCord/lastSuccessfulBuild/artifact/bootstrap/target/BungeeCord.jar &&
+          java -jar /server/BungeeCord.jar -config /server/config.yml
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ .Release.Name }}-config
