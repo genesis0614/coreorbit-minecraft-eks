@@ -10,6 +10,14 @@ Terraform으로 AWS 네트워크와 EKS 클러스터를 만들고, Amazon EFS를
 - **공유 저장소**: Amazon EFS CSI Driver, StorageClass, PVC
 - **로그 분석**: Filebeat → Logstash → Elasticsearch → Kibana
 
+## 자동 검사 (GitHub Actions)
+
+`main` 브랜치에 push하거나 `main`을 대상으로 PR을 만들면 Terraform 설정을
+검증하고, BungeeCord Helm 차트와 p2·p3의 일반 YAML 파일 문법을 검사합니다.
+검사 결과는 GitHub의 Actions 탭에서 확인할 수 있습니다.
+AWS에 접속하거나 `terraform plan` 또는 `terraform apply`를 실행하지 않으며,
+YAML 문법 검사는 Kubernetes에서 정상 배포되는지까지 확인하지는 않습니다.
+
 ## 아키텍처 개요
 ![설명](assets/architecture-v3.png)
 
